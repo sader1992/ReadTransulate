@@ -1,0 +1,381 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using System.Windows;
+using Point = System.Drawing.Point;
+
+using IronOcr;
+using System.Net;
+using RestSharp;
+using System.Web;
+using System.Threading;
+using System.Diagnostics;
+using Tesseract;
+
+namespace ReadTransulate
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+        }
+
+        private const int cGrip = 16;
+        private const int cCaption = 32;
+		public Image bitmap_old;
+
+
+		private void Form1_Load(object sender, EventArgs e)
+        {
+            this.BackColor = Color.FromArgb(71, 50, 60);
+            this.TransparencyKey = this.BackColor;
+
+
+			take_button.BringToFront();
+			//label_result.AutoSize = true;
+			//this.FormBorderStyle = FormBorderStyle.SizableToolWindow;
+			//this.ControlBox = false;
+			//this.Text = String.Empty;
+		}
+
+        private async void take_button_Click(object sender, EventArgs e)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            label_result.Text = "";
+            this.BackColor = Color.FromArgb(71, 50, 60);
+            this.TransparencyKey = this.BackColor;
+            var Ocr = new IronTesseract();
+            Ocr.Language = OcrLanguage.Japanese;
+
+			while (this.BackColor != Color.FromArgb(71, 50, 60) || label_result.Text != "")
+			{
+			    //Thread.Sleep(50);
+				await Task.Delay(25);
+			}
+			await Task.Delay(25);
+			Rectangle bounds = this.DesktopBounds;
+
+
+
+
+
+
+
+			using (Image bitmap = new Bitmap(this.Size.Width, this.Size.Height))
+			{
+
+
+
+				string r = "";
+				using (Graphics g = Graphics.FromImage(bitmap))
+				{
+					g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+				}
+
+				//while(bitmap == bitmap_old)
+				//{
+				//	using (Graphics g = Graphics.FromImage(bitmap))
+				//	{
+				//		g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+				//	}
+				//}
+				//Debug.WriteLine("###############");
+
+				r += "###############" + Environment.NewLine;
+				using (var Input = new OcrInput(bitmap))
+				{
+					var Result = Ocr.Read(Input);
+
+					//Debug.WriteLine(Result.Text);
+					r += Result.Text + Environment.NewLine;
+
+					///var textTranslatorUrlKey = "";
+					///string translated = string.Empty;
+					///bool success = false;
+					///int trycount = 0;
+					///do
+					///{
+					///	try
+					///	{
+					///		success = GTranslateService.Translate(Result.Text, "ja", "en", textTranslatorUrlKey, out translated);
+					///	}
+					///	catch (Exception)
+					///	{
+					///		success = false;
+					///	}
+					///	trycount++;
+					///} while (success == false && trycount <= 2);
+					///this.TransparencyKey = Control.DefaultBackColor;
+					///this.BackColor = Color.White;
+					///label_result.Text = translated;
+					///this.DoubleBuffered = true;
+					///this.SetStyle(ControlStyles.ResizeRedraw, true);
+					///bitmap_old = bitmap;
+					///
+				}
+
+
+				//Debug.WriteLine("---------------");
+				r += "---------------" + Environment.NewLine;
+
+				r += GetText((Bitmap)bitmap) + Environment.NewLine;
+				r += "###############" + Environment.NewLine;
+				//Debug.WriteLine(GetText((Bitmap)bitmap));
+				//Debug.WriteLine("###############");
+
+
+
+
+				//var Result = new IronTesseract().Read(bitmap);
+				//Clipboard.SetText(Result.Text);
+				this.TransparencyKey = Control.DefaultBackColor;
+				this.BackColor = Color.White;
+				this.DoubleBuffered = true;
+				label_result.Text = r;
+				this.SetStyle(ControlStyles.ResizeRedraw, true);
+
+				////bitmap.Save(path + "/test.jpg", ImageFormat.Jpeg);
+			}
+
+
+
+
+
+
+
+
+
+
+		}
+
+		public static string GetText(Bitmap imgsource)
+		{
+			var ocrtext = string.Empty;
+			using (var engine = new TesseractEngine(@"./OcrData", "jpn", EngineMode.Default))
+			{
+				using (var img = PixConverter.ToPix(imgsource))
+				{
+					using (var page = engine.Process(img))
+					{
+						ocrtext = page.GetText();
+					}
+				}
+			}
+
+			return ocrtext;
+		}
+
+		private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            Rectangle rc = new Rectangle(this.ClientSize.Width - cGrip, this.ClientSize.Height - cGrip, cGrip, cGrip);
+            ControlPaint.DrawSizeGrip(e.Graphics, this.BackColor, rc);
+
+            Pen blackPen = new Pen(Color.FromArgb(255, 0, 0, 0), 10);
+            e.Graphics.DrawRectangle(blackPen, 0, 0, this.Width, this.Height);
+
+            take_button.Top = this.Height - (take_button.Height + 20);
+            take_button.Left = this.Width - (take_button.Width + 20);
+
+			clear_button.Top = this.Height - (clear_button.Height + 20);
+			clear_button.Left = this.Width - (take_button.Width + 40 + clear_button.Width);
+
+			label_result.Top = 20;
+			label_result.Left = 20;
+			label_result.MaximumSize = new System.Drawing.Size(Width-50, 0);
+		}
+
+        protected override void WndProc(ref Message m)
+        {
+
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    Point pos = new Point(m.LParam.ToInt32());
+                    pos = this.PointToClient(pos);
+                    if (pos.Y < cCaption)
+                    {
+                        m.Result = (IntPtr)2;  // HTCAPTION
+                        return;
+                    }
+                    if (pos.X >= this.ClientSize.Width - cGrip && pos.Y >= this.ClientSize.Height - cGrip)
+                    {
+                        m.Result = (IntPtr)17; // HTBOTTOMRIGHT
+                        return;
+                    }
+                    return;
+            }
+
+
+            base.WndProc(ref m);
+        }
+
+        private void take_button_ClickAsync(object sender, EventArgs e)
+        {
+
+        }
+
+        private void clear_button_Click(object sender, EventArgs e)
+        {
+			label_result.Text = "";
+			this.BackColor = Color.FromArgb(71, 50, 60);
+			this.TransparencyKey = this.BackColor;
+		}
+    }
+
+
+
+
+    public class GTranslateService
+	{
+		private const string RequestUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0";
+		private const string RequestGoogleTranslatorUrl = "https://translate.googleapis.com/translate_a/single?client=gtx&sl={0}&tl={1}&hl=en&dt=t&dt=bd&dj=1&source=icon&tk=467103.467103&q={2}";
+
+
+		public delegate void TranslateCallBack(bool succeed, string result);
+		public static void TranslateAsync(
+			string text,
+			string sourceLng,
+			string destLng,
+			string textTranslatorUrlKey,
+			TranslateCallBack callBack)
+		{
+			var request = CreateWebRequest(text, sourceLng, destLng, textTranslatorUrlKey);
+			request.BeginGetResponse(
+				TranslateRequestCallBack,
+				new KeyValuePair<WebRequest, TranslateCallBack>(request, callBack));
+		}
+
+		public static bool Translate(
+			string text,
+			string sourceLng,
+			string destLng,
+			string textTranslatorUrlKey,
+			out string result)
+		{
+			var request = CreateWebRequest(text, sourceLng, destLng, textTranslatorUrlKey);
+			try
+			{
+				var response = (HttpWebResponse)request.GetResponse();
+
+				if (response.StatusCode != HttpStatusCode.OK)
+				{
+					result = "Response is failed with code: " + response.StatusCode;
+					return false;
+				}
+
+				using (var stream = response.GetResponseStream())
+				{
+					var succeed = ReadGoogleTranslatedResult(stream, out var output);
+					result = output;
+					return succeed;
+				}
+			}
+			catch (Exception ex)
+			{
+				result = ex.Message;
+				return false;
+			}
+		}
+
+		static WebRequest CreateWebRequest(
+			string text,
+			string lngSourceCode,
+			string lngDestinationCode,
+			string textTranslatorUrlKey)
+		{
+			text = HttpUtility.UrlEncode(text);
+
+			var url = string.Format(RequestGoogleTranslatorUrl, lngSourceCode, lngDestinationCode, text);
+
+
+			var create = (HttpWebRequest)WebRequest.Create(url);
+			create.UserAgent = RequestUserAgent;
+			create.Timeout = 50 * 1000;
+			return create;
+		}
+
+		private static void TranslateRequestCallBack(IAsyncResult ar)
+		{
+			var pair = (KeyValuePair<WebRequest, TranslateCallBack>)ar.AsyncState;
+			var request = pair.Key;
+			var callback = pair.Value;
+			HttpWebResponse response = null;
+			try
+			{
+				response = (HttpWebResponse)request.EndGetResponse(ar);
+				if (response.StatusCode != HttpStatusCode.OK)
+				{
+					callback(false, "Response is failed with code: " + response.StatusCode);
+					return;
+				}
+
+				using (var stream = response.GetResponseStream())
+				{
+					string output;
+					var succeed = ReadGoogleTranslatedResult(stream, out output);
+
+					callback(succeed, output);
+				}
+			}
+			catch (Exception ex)
+			{
+				callback(false, "Request failed.\r\n" + ex.Message);
+			}
+			finally
+			{
+				response?.Close();
+			}
+		}
+
+		/// <summary>
+		///  the main trick :)
+		/// </summary>
+		static bool ReadGoogleTranslatedResult(Stream rawdata, out string result)
+		{
+			string text;
+			using (var reader = new StreamReader(rawdata, Encoding.UTF8))
+			{
+				text = reader.ReadToEnd();
+			}
+
+			try
+			{
+				dynamic obj = SimpleJson.DeserializeObject(text);
+
+				var final = "";
+
+				// the number of lines
+				int lines = obj[0].Count;
+				for (int i = 0; i < lines; i++)
+				{
+					// the translated text.
+					final += (obj[0][i][0]).ToString();
+				}
+				result = final;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				result = ex.Message;
+				return false;
+			}
+		}
+
+	}
+}
