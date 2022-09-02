@@ -20,10 +20,9 @@ namespace ReadTransulate
             string text,
             string sourceLng,
             string destLng,
-            string textTranslatorUrlKey,
             TranslateCallBack callBack)
         {
-            var request = CreateWebRequest(text, sourceLng, destLng, textTranslatorUrlKey);
+            var request = CreateWebRequest(text, sourceLng, destLng);
             request.BeginGetResponse(
                 TranslateRequestCallBack,
                 new KeyValuePair<WebRequest, TranslateCallBack>(request, callBack));
@@ -33,10 +32,9 @@ namespace ReadTransulate
             string text,
             string sourceLng,
             string destLng,
-            string textTranslatorUrlKey,
             out string result)
         {
-            var request = CreateWebRequest(text, sourceLng, destLng, textTranslatorUrlKey);
+            var request = CreateWebRequest(text, sourceLng, destLng);
             try
             {
                 var response = (HttpWebResponse)request.GetResponse();
@@ -64,8 +62,7 @@ namespace ReadTransulate
         static WebRequest CreateWebRequest(
             string text,
             string lngSourceCode,
-            string lngDestinationCode,
-            string textTranslatorUrlKey)
+            string lngDestinationCode)
         {
             text = HttpUtility.UrlEncode(text);
 

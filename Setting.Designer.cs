@@ -46,6 +46,7 @@ namespace ReadTransulate
             this.textBox_tran_to = new System.Windows.Forms.TextBox();
             this.fontDialog_1 = new System.Windows.Forms.FontDialog();
             this.FontButton = new System.Windows.Forms.Button();
+            this.ApplyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBox_lang_file
@@ -169,19 +170,17 @@ namespace ReadTransulate
             // 
             // textBox_tran_from
             // 
-            this.textBox_tran_from.Location = new System.Drawing.Point(215, 116);
+            this.textBox_tran_from.Location = new System.Drawing.Point(236, 117);
             this.textBox_tran_from.Name = "textBox_tran_from";
             this.textBox_tran_from.Size = new System.Drawing.Size(100, 22);
             this.textBox_tran_from.TabIndex = 23;
-            this.textBox_tran_from.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_tran_from_KeyPress);
             // 
             // textBox_tran_to
             // 
-            this.textBox_tran_to.Location = new System.Drawing.Point(215, 144);
+            this.textBox_tran_to.Location = new System.Drawing.Point(236, 145);
             this.textBox_tran_to.Name = "textBox_tran_to";
             this.textBox_tran_to.Size = new System.Drawing.Size(100, 22);
             this.textBox_tran_to.TabIndex = 23;
-            this.textBox_tran_to.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_tran_to_KeyPress);
             // 
             // FontButton
             // 
@@ -193,11 +192,22 @@ namespace ReadTransulate
             this.FontButton.UseVisualStyleBackColor = true;
             this.FontButton.Click += new System.EventHandler(this.button7_Click);
             // 
+            // ApplyButton
+            // 
+            this.ApplyButton.Location = new System.Drawing.Point(63, 351);
+            this.ApplyButton.Name = "ApplyButton";
+            this.ApplyButton.Size = new System.Drawing.Size(289, 44);
+            this.ApplyButton.TabIndex = 27;
+            this.ApplyButton.Text = "Apply";
+            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.Click += new System.EventHandler(this.ApplyButton_Click);
+            // 
             // Setting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 431);
+            this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.FontButton);
             this.Controls.Add(this.textBox_tran_to);
             this.Controls.Add(this.textBox_tran_from);
@@ -240,5 +250,6 @@ namespace ReadTransulate
         private System.Windows.Forms.TextBox textBox_tran_to;
         private System.Windows.Forms.FontDialog fontDialog_1;
         private System.Windows.Forms.Button FontButton;
+        private System.Windows.Forms.Button ApplyButton;
     }
 }

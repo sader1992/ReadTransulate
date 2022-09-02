@@ -125,16 +125,15 @@ namespace ReadTransulate
 
 		private string Translate_Text(string original_text)
         {
-            var textTranslatorUrlKey = "";
             string translated_text = string.Empty;
-
-			bool success = false;
             int trycount = 0;
+
+            bool success;
             do
             {
                 try
                 {
-                    success = GTranslateService.Translate(original_text, tran_from, tran_to, textTranslatorUrlKey, out translated_text);
+                    success = GTranslateService.Translate(original_text, tran_from, tran_to, out translated_text);
                 }
                 catch (Exception)
                 {
