@@ -29,6 +29,7 @@ namespace ReadTransulate
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Setting));
             this.comboBox_lang_file = new System.Windows.Forms.ComboBox();
             this.checkBox_AlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -212,6 +213,7 @@ namespace ReadTransulate
             this.Controls.Add(this.comboBox_lang_file);
             this.Controls.Add(this.copy_to_clip_take);
             this.Controls.Add(this.checkBox_AlwaysOnTop);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Setting";
             this.Text = "Setting";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Setting_FormClosing);
