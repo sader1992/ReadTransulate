@@ -11,13 +11,13 @@ APP (Folder)<br />
 
 
 # TODO:
-* Key --> Keys
-* Add option to unset a hotkey to nothing
-* Add option to disable hotkey if it's not on the front, or just a quick button or checkbox in the main window (or on minimize)
-* Add Minimize button
+* Keys --> Key (Done)
+* Add option to unset a hotkey to nothing (Done)
+* Add option to disable hotkey if it's not on the front, or just a quick button or checkbox in the main window (or on minimize) (Done)
+* Add Minimize button (Done)
 * Add option to read original text
 * Add option to change the background color after transulation
-* make copy function clear the window first
+* make copy function clear the window first (Done)
 * Rename functions/windows/Orgnize the code
 * Resort keys on resize
 * find a better trained language data for japanese

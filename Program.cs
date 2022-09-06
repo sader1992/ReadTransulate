@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace ReadTransulate
 {
@@ -26,7 +28,7 @@ namespace ReadTransulate
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             _hookID = SetHook(_proc);
-            Application.Run(new Form1());
+            Application.Run(new MainWindow());
             UnhookWindowsHookEx(_hookID);
         }
 
@@ -46,26 +48,26 @@ namespace ReadTransulate
         private static IntPtr HookCallback(
             int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN && MainWindow.KotkeyActivated)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 for (int i = 0; i < Config.Key_list.Count; i++)
                 {
-                    if (!Enum.TryParse(vkCode.ToString(), out Keys key1)) continue;
-                    if (Config.Key_list[i] == key1)
+                    int x = KeyInterop.VirtualKeyFromKey(Config.Key_list[i]);
+                    if (x == vkCode)
                     {
-                        if (key1 == Form1.take_key && !Form1.Start_tran)
+                        if (Config.Key_list[i] == MainWindow.take_key && !MainWindow.Start_tran)
                         {
-                            Form1.Start_tran = true;
+                            MainWindow.Start_tran = true;
                         }
-
-                        if (key1 == Form1.clear_key && !Form1.Start_clear)
+                    
+                        if (Config.Key_list[i] == MainWindow.clear_key && !MainWindow.Start_clear)
                         {
-                            Form1.Start_clear = true;
+                            MainWindow.Start_clear = true;
                         }
-                        if (key1 == Form1.copy_key && !Form1.Start_copy)
+                        if (Config.Key_list[i] == MainWindow.copy_key && !MainWindow.Start_copy)
                         {
-                            Form1.Start_copy = true;
+                            MainWindow.Start_copy = true;
                         }
                     }
                 }

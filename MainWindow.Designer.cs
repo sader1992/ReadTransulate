@@ -1,7 +1,7 @@
 ﻿
 namespace ReadTransulate
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace ReadTransulate
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.label_result = new System.Windows.Forms.Label();
             this.clear_button = new System.Windows.Forms.Button();
             this.take_button = new System.Windows.Forms.Button();
@@ -40,6 +40,8 @@ namespace ReadTransulate
             this.ClearTimer = new System.Windows.Forms.Timer(this.components);
             this.CopyTimer = new System.Windows.Forms.Timer(this.components);
             this.Exit_Button = new System.Windows.Forms.Button();
+            this.checkBox_HotKeys = new System.Windows.Forms.CheckBox();
+            this.Minimize_Button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label_result
@@ -110,20 +112,45 @@ namespace ReadTransulate
             // 
             // Exit_Button
             // 
-            this.Exit_Button.Font = new System.Drawing.Font("MS UI Gothic", 7F);
-            this.Exit_Button.Location = new System.Drawing.Point(281, 221);
+            this.Exit_Button.Font = new System.Drawing.Font("Myanmar Text", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exit_Button.Location = new System.Drawing.Point(553, 155);
             this.Exit_Button.Name = "Exit_Button";
-            this.Exit_Button.Size = new System.Drawing.Size(75, 23);
+            this.Exit_Button.Size = new System.Drawing.Size(75, 40);
             this.Exit_Button.TabIndex = 7;
             this.Exit_Button.Text = "x";
+            this.Exit_Button.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.Exit_Button.UseVisualStyleBackColor = true;
             this.Exit_Button.Click += new System.EventHandler(this.Exit_Button_Click);
             // 
-            // Form1
+            // checkBox_HotKeys
+            // 
+            this.checkBox_HotKeys.AutoSize = true;
+            this.checkBox_HotKeys.Location = new System.Drawing.Point(416, 155);
+            this.checkBox_HotKeys.Name = "checkBox_HotKeys";
+            this.checkBox_HotKeys.Size = new System.Drawing.Size(18, 17);
+            this.checkBox_HotKeys.TabIndex = 8;
+            this.checkBox_HotKeys.UseVisualStyleBackColor = true;
+            this.checkBox_HotKeys.CheckedChanged += new System.EventHandler(this.checkBox_HotKeys_CheckedChanged);
+            // 
+            // Minimize_Button
+            // 
+            this.Minimize_Button.Font = new System.Drawing.Font("Myanmar Text", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Minimize_Button.Location = new System.Drawing.Point(730, 119);
+            this.Minimize_Button.Name = "Minimize_Button";
+            this.Minimize_Button.Size = new System.Drawing.Size(38, 24);
+            this.Minimize_Button.TabIndex = 9;
+            this.Minimize_Button.Text = "ー";
+            this.Minimize_Button.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.Minimize_Button.UseVisualStyleBackColor = true;
+            this.Minimize_Button.Click += new System.EventHandler(this.Minimize_Button_Click);
+            // 
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(955, 319);
+            this.Controls.Add(this.Minimize_Button);
+            this.Controls.Add(this.checkBox_HotKeys);
             this.Controls.Add(this.Exit_Button);
             this.Controls.Add(this.Setting_Button);
             this.Controls.Add(this.clear_button);
@@ -131,8 +158,8 @@ namespace ReadTransulate
             this.Controls.Add(this.take_button);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainWindow";
+            this.Text = "Main Window";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.ResumeLayout(false);
@@ -151,6 +178,8 @@ namespace ReadTransulate
         private System.Windows.Forms.Timer ClearTimer;
         private System.Windows.Forms.Timer CopyTimer;
         private System.Windows.Forms.Button Exit_Button;
+        private System.Windows.Forms.CheckBox checkBox_HotKeys;
+        private System.Windows.Forms.Button Minimize_Button;
     }
 }
 

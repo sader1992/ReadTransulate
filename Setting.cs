@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Input;
 
 namespace ReadTransulate
 {
@@ -12,14 +13,14 @@ namespace ReadTransulate
         private static bool k2_cap = false;
         private static bool k3_cap = false;
 
-        private static bool AlwaysOnTop = Form1.AlwaysOnTop;
-        private static bool CopyOnTake = Form1.CopyOnTake;
-        private static string lang_file = Form1.lang_file;
-        private static Font font = Form1.font;
-        private static string color = Form1.color;
-        private static Keys take_key = Form1.take_key;
-        private static Keys clear_key = Form1.clear_key;
-        private static Keys copy_key = Form1.copy_key;
+        private static bool AlwaysOnTop = ReadTransulate.MainWindow.AlwaysOnTop;
+        private static bool CopyOnTake = ReadTransulate.MainWindow.CopyOnTake;
+        private static string lang_file = ReadTransulate.MainWindow.lang_file;
+        private static Font font = ReadTransulate.MainWindow.font;
+        private static string color = ReadTransulate.MainWindow.color;
+        private static Key take_key = ReadTransulate.MainWindow.take_key;
+        private static Key clear_key = ReadTransulate.MainWindow.clear_key;
+        private static Key copy_key = ReadTransulate.MainWindow.copy_key;
 
         public Setting(Form main)
         {
@@ -47,17 +48,17 @@ namespace ReadTransulate
                 comboBox_lang_file.Items.Add(f_n);
             }
             
-            if (Form1.AlwaysOnTop) checkBox_AlwaysOnTop.Checked = true;
-            if (Form1.CopyOnTake) copy_to_clip_take.Checked = true;
-            comboBox_lang_file.SelectedIndex = comboBox_lang_file.FindStringExact(Form1.lang_file);
-            comboBox_lang_file.SelectedText = Form1.lang_file;
-            textBox_tran_from.Text = Form1.tran_from;
-            textBox_tran_to.Text = Form1.tran_to;
-            TakeShortcut.Text = Form1.take_key.ToString();
-            ClearShortcut.Text = Form1.clear_key.ToString();
-            CopyShortcut.Text = Form1.copy_key.ToString();
-            FontButton.ForeColor = Color.FromName(Form1.color);
-            FontButton.Text = "Font[" + Form1.font.FontFamily.Name.ToString() + "(" + Form1.font.Size.ToString() + "px)]";
+            if (ReadTransulate.MainWindow.AlwaysOnTop) checkBox_AlwaysOnTop.Checked = true;
+            if (ReadTransulate.MainWindow.CopyOnTake) copy_to_clip_take.Checked = true;
+            comboBox_lang_file.SelectedIndex = comboBox_lang_file.FindStringExact(ReadTransulate.MainWindow.lang_file);
+            comboBox_lang_file.SelectedText = ReadTransulate.MainWindow.lang_file;
+            textBox_tran_from.Text = ReadTransulate.MainWindow.tran_from;
+            textBox_tran_to.Text = ReadTransulate.MainWindow.tran_to;
+            TakeShortcut.Text = ReadTransulate.MainWindow.take_key.ToString();
+            ClearShortcut.Text = ReadTransulate.MainWindow.clear_key.ToString();
+            CopyShortcut.Text = ReadTransulate.MainWindow.copy_key.ToString();
+            FontButton.ForeColor = Color.FromName(ReadTransulate.MainWindow.color);
+            FontButton.Text = "Font[" + ReadTransulate.MainWindow.font.FontFamily.Name.ToString() + "(" + ReadTransulate.MainWindow.font.Size.ToString() + "px)]";
         }
 
 
@@ -89,28 +90,53 @@ namespace ReadTransulate
 
         private void button4_Click(object sender, EventArgs e)
         {
-            TakeShortcut.Text = "Click";
-            k1_cap = true;
+            if(TakeShortcut.Text != "None")
+            {
+                TakeShortcut.Text = "None";
+                take_key = Key.None;
+            }
+            else
+            {
+                TakeShortcut.Text = "Click";
+                k1_cap = true;
+            }
+            
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            ClearShortcut.Text = "Click";
-            k2_cap = true;
+            if (ClearShortcut.Text != "None")
+            {
+                ClearShortcut.Text = "None";
+                clear_key = Key.None;
+            }
+            else
+            {
+                ClearShortcut.Text = "Click";
+                k2_cap = true;
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            CopyShortcut.Text = "Click";
-            k3_cap = true;
+            if (CopyShortcut.Text != "None")
+            {
+                CopyShortcut.Text = "None";
+                copy_key = Key.None;
+            }
+            else
+            {
+                CopyShortcut.Text = "Click";
+                k3_cap = true;
+            }
         }
 
         private void button4_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             if (k1_cap)
             {
-                if (Enum.TryParse(e.KeyCode.ToString(), out Keys key))
-                    if (!Enum.IsDefined(typeof(Keys), key)) return;
+                if (Enum.TryParse(e.KeyCode.ToString(), out Key key))
+                    if (!Enum.IsDefined(typeof(Key), key)) return;
                 take_key = key;
                 TakeShortcut.Text = take_key.ToString();
                 k1_cap = false;
@@ -121,8 +147,8 @@ namespace ReadTransulate
         {
             if (k2_cap)
             {
-                if (Enum.TryParse(e.KeyCode.ToString(), out Keys key))
-                    if (!Enum.IsDefined(typeof(Keys), key)) return;
+                if (Enum.TryParse(e.KeyCode.ToString(), out Key key))
+                    if (!Enum.IsDefined(typeof(Key), key)) return;
                 clear_key = key;
                 ClearShortcut.Text = clear_key.ToString();
                 k2_cap = false;
@@ -133,8 +159,8 @@ namespace ReadTransulate
         {
             if (k3_cap)
             {
-                if (Enum.TryParse(e.KeyCode.ToString(), out Keys key))
-                    if (!Enum.IsDefined(typeof(Keys), key)) return;
+                if (Enum.TryParse(e.KeyCode.ToString(), out Key key))
+                    if (!Enum.IsDefined(typeof(Key), key)) return;
                 copy_key = key;
                 CopyShortcut.Text = copy_key.ToString();
                 k3_cap = false;
@@ -143,18 +169,21 @@ namespace ReadTransulate
 
         private void ApplyButton_Click(object sender, EventArgs e)
         {
-            Form1.AlwaysOnTop = AlwaysOnTop;
-            Form1.CopyOnTake = CopyOnTake;
-            Form1.lang_file = lang_file;
-            Form1.tran_from = textBox_tran_from.Text;
-            Form1.tran_to = textBox_tran_to.Text;
-            Form1.font = font;
-            Form1.color = color;
-            Form1.take_key = take_key;
-            Form1.clear_key = clear_key;
-            Form1.copy_key = copy_key;
+            ReadTransulate.MainWindow.AlwaysOnTop = AlwaysOnTop;
+            ReadTransulate.MainWindow.CopyOnTake = CopyOnTake;
+            ReadTransulate.MainWindow.lang_file = lang_file;
+            ReadTransulate.MainWindow.tran_from = textBox_tran_from.Text;
+            ReadTransulate.MainWindow.tran_to = textBox_tran_to.Text;
+            ReadTransulate.MainWindow.font = font;
+            ReadTransulate.MainWindow.color = color;
+            ReadTransulate.MainWindow.take_key = take_key;
+            ReadTransulate.MainWindow.clear_key = clear_key;
+            ReadTransulate.MainWindow.copy_key = copy_key;
             Config.SaveConfig();
-            MessageBox.Show("Saved.");
+
+            
+            Main_Window.Show();
+            this.Close();
         }
     }
 }

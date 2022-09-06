@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Point = System.Drawing.Point;
 using Tesseract;
+using System.Windows.Input;
 
 namespace ReadTransulate
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
@@ -36,9 +37,10 @@ namespace ReadTransulate
         public static string tran_to = "en";
         public static Font font = new Font("Arial", 12F);
         public static string color = Color.Black.ToString();
-        public static Keys take_key;
-        public static Keys clear_key;
-        public static Keys copy_key;
+        public static Key take_key;
+        public static Key clear_key;
+        public static Key copy_key;
+        public static bool KotkeyActivated = false;
 
 
         private const int cGrip = 16;
@@ -69,9 +71,16 @@ namespace ReadTransulate
             Setting_Button.Height = 20;
             Setting_Button.Width = 20;
 
-            Exit_Button.Height = 20;
-            Exit_Button.Width = 20;
-            
+            checkBox_HotKeys.Height = 20;
+            checkBox_HotKeys.Width = 20;
+
+            Exit_Button.Height = 25;
+            Exit_Button.Width = 25;
+            Minimize_Button.Height = 25;
+            Minimize_Button.Width = 25;
+            checkBox_HotKeys.Checked = true;
+
+
             Config.readConfig();
         }
 
@@ -82,6 +91,7 @@ namespace ReadTransulate
 
 		public async Task TakeTran(bool tran, bool copy = false)
 		{
+            if (this.WindowState == FormWindowState.Minimized) return;
 			string path = AppDomain.CurrentDomain.BaseDirectory;
 			label_result.Text = "";
 			this.BackColor = Color.FromArgb(71, 50, 60);
@@ -90,6 +100,8 @@ namespace ReadTransulate
 			take_button.Hide();
             Setting_Button.Hide();
             Exit_Button.Hide();
+            Minimize_Button.Hide();
+            checkBox_HotKeys.Hide();
             await Task.Delay(1);
 			Rectangle bounds = this.DesktopBounds;
 
@@ -121,6 +133,8 @@ namespace ReadTransulate
 			take_button.Show();
             Setting_Button.Show();
             Exit_Button.Show();
+            Minimize_Button.Show();
+            checkBox_HotKeys.Show();
         }
 
 		private string Translate_Text(string original_text)
@@ -167,16 +181,19 @@ namespace ReadTransulate
             Rectangle rc = new Rectangle(this.ClientSize.Width - cGrip, this.ClientSize.Height - cGrip, cGrip, cGrip);
             ControlPaint.DrawSizeGrip(e.Graphics, this.BackColor, rc);
 
-
 			Pen redPen = new Pen(Color.Red, 10);
 			e.Graphics.DrawRectangle(redPen, 5, 5, this.Width - 10, this.Height - 10);
-
 
 			Pen blackPen = new Pen(Color.FromArgb(255, 0, 0, 0), 10);
             e.Graphics.DrawRectangle(blackPen, 0, 0, this.Width, this.Height);
 
-            Exit_Button.Top = this.Height - 130;
-            Exit_Button.Left = this.Width - 40;
+            Exit_Button.Top = 20;
+            Exit_Button.Left = this.Width - 50;
+            Minimize_Button.Top = 20;
+            Minimize_Button.Left = this.Width - 80;
+
+            checkBox_HotKeys.Top = this.Height - 130;
+            checkBox_HotKeys.Left = this.Width - 40;
 
             Setting_Button.Top = this.Height - 100;
             Setting_Button.Left = this.Width - 40;
@@ -295,6 +312,23 @@ namespace ReadTransulate
         private void Exit_Button_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void checkBox_HotKeys_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_HotKeys.Checked)
+            {
+                KotkeyActivated = true;
+            }
+            else
+            {
+                KotkeyActivated = false;
+            }
+        }
+
+        private void Minimize_Button_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }
